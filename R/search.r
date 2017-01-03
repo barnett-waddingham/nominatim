@@ -55,12 +55,7 @@ osm_geocode <- function(query,
                         exclude_place_ids=NULL,
                         limit=1,
                         email=getOption("OSM_API_EMAIL", "nominatimrpackage@example.com"),
-                        accept_language=getOption("LANG", "en-US,en;q=0.8"),
-                        key = getOption("OSM_API_KEY", "")) {
-
-  if (nchar(key) == 0) {
-    stop('Please provide a openstreet API key')
-  }
+                        accept_language=getOption("LANG", "en-US,en;q=0.8")) {
 
   bind_rows(pblapply(1:length(query), function(i) {
 
@@ -75,9 +70,6 @@ osm_geocode <- function(query,
     if (!is.null(accept_language)) params <- sprintf("%s&accept-language=%s", params, curl::curl_escape(accept_language))
     params <- sprintf("%s&address_details=%d", params, as.numeric(address_details))
     params <- sprintf("%s&limit=%d", params, as.numeric(limit))
-    params <- sprintf("%s&key=%s", params, key)
-
-    if (length(query) > 1 & length(query) != i) Sys.sleep(getOption("NOMINATIM.DELAY"))
 
     .search(param_base, params)
 
@@ -135,12 +127,7 @@ osm_search <- function(query,
                        exclude_place_ids=NULL,
                        limit=1,
                        email=getOption("OSM_API_EMAIL", "nominatimrpackage@example.com"),
-                       accept_language=getOption("LANG", "en-US,en;q=0.8"),
-                       key = getOption("OSM_API_KEY", "")) {
-
-  if (nchar(key) == 0) {
-    stop('Please provide a openstreet API key')
-  }
+                       accept_language=getOption("LANG", "en-US,en;q=0.8")) {
 
   bind_rows(pblapply(1:length(query), function(i) {
 
@@ -151,12 +138,9 @@ osm_search <- function(query,
     if (!is.null(exclude_place_ids)) param_base <- sprintf("%s&exclude_place_ids=%s", param_base, exclude_place_ids)
     if (!is.null(email)) param_base <- sprintf("%s&email=%s", param_base, curl::curl_escape(email))
     if (!is.null(accept_language)) param_base <- sprintf("%s&accept-language=%s", param_base, curl::curl_escape(accept_language))
-    param_base <- sprintf("%s&key=%s", param_base, key)
     param_base <- sprintf("%s&address_details=%d", param_base, as.numeric(address_details))
     param_base <- sprintf("%s&limit=%d", param_base, as.numeric(limit))
     param_base <- sprintf("%s&q=%s", param_base, gsub(" ", "+", query[i]))
-
-    if (length(query) > 1 & length(query) != i) Sys.sleep(getOption("NOMINATIM.DELAY"))
 
     .search(getOption("NOMINATIM.search_base"), param_base)
 

@@ -41,15 +41,10 @@
 reverse_geocode_coords <- function(lat, lon,
                                    zoom=18, address_details=TRUE,
                                    email=getOption("OSM_API_EMAIL", "nominatimrpackage@example.com"),
-                                   accept_language=getOption("LANG", "en-US,en;q=0.8"),
-                                   key = getOption("OSM_API_KEY", "")) {
+                                   accept_language=getOption("LANG", "en-US,en;q=0.8")) {
 
   if (length(lat) != length(lon)) {
     stop("lat & lon vectors must be the same size", call.=FALSE)
-  }
-
-  if (nchar(key) == 0) {
-    stop('Please provide a openstreet API key')
   }
 
   bind_rows(pblapply(1:length(lat), function(i) {
@@ -57,9 +52,7 @@ reverse_geocode_coords <- function(lat, lon,
     params <- list(lat=lat[i], lon=lon[i],
                    format="json", zoom=zoom, email=email,
                    `accept-language`=accept_language,
-                   addressdetails=as.numeric(address_details), key = key)
-
-    if (length(lat) > 1 & length(lat) != i) Sys.sleep(getOption("NOMINATIM.DELAY"))
+                   addressdetails=as.numeric(address_details))
 
     reverse_geocode(params)
 
@@ -112,15 +105,10 @@ reverse_geocode_coords <- function(lat, lon,
 reverse_geocode_osm <- function(osm_type, osm_id,
                                 zoom=18, address_details=TRUE,
                                 email=getOption("OSM_API_EMAIL", "nominatimrpackage@example.com"),
-                                accept_language=getOption("LANG", "en-US,en;q=0.8"),
-                                key = getOption("OSM_API_KEY", "")) {
+                                accept_language=getOption("LANG", "en-US,en;q=0.8")) {
 
   if (length(osm_type) != length(osm_id)) {
     stop("osm_type & osm_id vectors must be the same size", call.=FALSE)
-  }
-
-  if (nchar(key) == 0) {
-    stop('Please provide a openstreet API key')
   }
 
   bind_rows(pblapply(1:length(osm_type), function(i) {
@@ -128,9 +116,7 @@ reverse_geocode_osm <- function(osm_type, osm_id,
     params <- list(osm_type=osm_type[i], osm_id=osm_id[i],
                    format="json", zoom=zoom, email=email,
                    `accept-language`=accept_language,
-                   addressdetails=as.numeric(address_details), key = key)
-
-    if (length(osm_type) > 1 & length(osm_type) != i) Sys.sleep(getOption("NOMINATIM.DELAY"))
+                   addressdetails=as.numeric(address_details))
 
     reverse_geocode(params)
 
@@ -173,4 +159,3 @@ reverse_geocode <- function(params) {
   return(NULL)
 
 }
-

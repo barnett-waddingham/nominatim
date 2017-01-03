@@ -62,12 +62,7 @@ osm_search_spatial <- function(query,
                                exclude_place_ids=NULL,
                                limit=1,
                                email=getOption("OSM_API_EMAIL", "nominatimrpackage@example.com"),
-                               accept_language=getOption("LANG", "en-US,en;q=0.8"),
-                               key = getOption("OSM_API_KEY", "")) {
-
-  if (nchar(key) == 0) {
-    stop('Please provide a openstreet API key')
-  }
+                               accept_language=getOption("LANG", "en-US,en;q=0.8")) {
 
   pblapply(1:length(query), function(i) {
 
@@ -78,13 +73,10 @@ osm_search_spatial <- function(query,
     if (!is.null(exclude_place_ids)) param_base <- sprintf("%s&exclude_place_ids=%s", param_base, exclude_place_ids)
     if (!is.null(email)) param_base <- sprintf("%s&email=%s", param_base, curl::curl_escape(email))
     if (!is.null(accept_language)) param_base <- sprintf("%s&accept-language=%s", param_base, curl::curl_escape(accept_language))
-    param_base <- sprintf("%s&key=%s", param_base, key)
     param_base <- sprintf("%s&address_details=%d", param_base, as.numeric(address_details))
     param_base <- sprintf("%s&limit=%d", param_base, as.numeric(limit))
     param_base <- sprintf("%s&polygon_geojson=1", param_base)
     param_base <- sprintf("%s&q=%s", param_base, gsub(" ", "+", query))
-
-    if (length(query) > 1 & length(query) != i) Sys.sleep(getOption("NOMINATIM.DELAY"))
 
     .search_poly(param_base)
 
