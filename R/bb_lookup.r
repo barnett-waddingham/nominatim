@@ -45,7 +45,7 @@ bb_lookup <- function(query, viewbox = NULL) {
     }
   }
 
-  res <- httr::GET("http://localhost:8080/search",
+  res <- httr::GET(search_base,
              query=list(q=query,
                         viewbox=viewbox,
                         format='json'))
