@@ -9,7 +9,7 @@
 #lookup_base <- "http://nominatim.openstreetmap.org/lookup"
 #reverse_base <- "http://open.mapquestapi.com/nominatim/v1/reverse.php"
 
-#
+# BW Nominatim Server
 search_base <- "http://az-bwlinux-01:8080/search"
 lookup_base <- "http://az-bwlinux-01:8080/lookup"
 reverse_base <- "http://az-bwlinux-01:8080/reverse"
