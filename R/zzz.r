@@ -5,7 +5,7 @@
 
 protocol <- 'http'
 
-server <- 'localhost'
+server <- 'az-bwlinux-01'
 
 port <- '8080'
 
