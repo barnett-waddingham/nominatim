@@ -129,7 +129,7 @@ reverse_geocode <- function(params) {
 
   tryCatch({
 
-    res <- GET(reverse_base, query=params, timeout(getOption("NOMINATIM.TIMEOUT")))
+    res <- GET(getOption("NOMINATIM.reverse_base"), query=params, timeout(getOption("NOMINATIM.TIMEOUT")))
     stop_for_status(res)
 
     ret <- content(res)

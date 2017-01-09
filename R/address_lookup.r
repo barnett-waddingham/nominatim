@@ -45,7 +45,7 @@ address_lookup <- function(osm_ids,
 
   tryCatch({
 
-    res <- GET(lookup_base, query=params, timeout(getOption("NOMINATIM.TIMEOUT")))
+    res <- GET(getOption("NOMINATIM.lookup_base"), query=params, timeout(getOption("NOMINATIM.TIMEOUT")))
     stop_for_status(res)
 
     ret <- content(res)

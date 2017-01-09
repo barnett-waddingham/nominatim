@@ -45,10 +45,7 @@ bb_lookup <- function(query, viewbox = NULL) {
     }
   }
 
-  res <- httr::GET(search_base,
-             query=list(q=query,
-                        viewbox=viewbox,
-                        format='json'))
+  res <- httr::GET(getOption("NOMINATIM.search_base"), query = list(q = query, viewbox = viewbox, format = 'json'))
 
   dat <- jsonlite::fromJSON(httr::content(res, as='text'))
 
