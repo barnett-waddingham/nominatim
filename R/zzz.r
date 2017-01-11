@@ -10,7 +10,7 @@ port <- '8080'
 
 # BW Nominatim Server
 search_base <- paste(protocol, '://', server, ':', port, '/search', sep = '')
-lookup_base <- paste(protocol, '://:', server, ':', port, '/lookup', sep = '')
+lookup_base <- paste(protocol, '://', server, ':', port, '/lookup', sep = '')
 reverse_base <- paste(protocol, '://', server, ':', port, '/reverse', sep = '')
 
 .onAttach <- function(libname, pkgname) {

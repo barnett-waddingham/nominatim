@@ -1,7 +1,6 @@
 ---
-output:
-  md_document:
-    variant: markdown_github
+output: md_document
+  variant: markdown_github
 ---
 
 ![](nominatim.png)
@@ -18,13 +17,13 @@ knitr::opts_chunk$set(
 
 nominatim is an R package to interface to the [OpenStreetMap Nominatim API](http://wiki.openstreetmap.org/wiki/Nominatim).
 
-From the wiki:
-
->Nominatim (from the Latin, 'by name') is a tool to search OSM data by name and address and to generate synthetic addresses of OSM points (reverse geocoding). It can be found at nominatim.openstreetmap.org.
->
->Nominatim is also used as one of the sources for the search box on the OpenStreetMap home page. Several companies provide hosted instances of Nominatim that you can query via an API, for example see MapQuest Open Initiative, PickPoint or the OpenCage Geocoder.
-
 Most functions hit the [MapQuest Nominatim API](http://open.mapquestapi.com/nominatim/) as recommended by OpenStreetMap.
+
+### Barnett Wadingham - Additions
+This code assumes that the geocoder is running on the http://localhost:8080.  This can be altered by updating the following options:
+- options(NOMINATIM.search_base)
+- options(NOMINATIM.lookup_base)
+- options(NOMINATIM.reverse_base)
 
 The following functions are implemented:
 
@@ -36,30 +35,19 @@ The following functions are implemented:
 - `reverse_geocode_osm`:	Reverse geocode based on OSM Type & Id
 - `bb_lookup`:  Bounding box (and other metadata) lookup
 
-### News
-
-- Version 0.2.1.9000 released : bb_lookup can also take an `sp::bbox`-like matrix as value to `viewbox` 
-- Version 0.2.0.9000 released : bb_lookup
-- Version 0.1.1.9000 released : address lookup, switch API server, API timeout watch
-- Version 0.1.0.9000 released : "spatial" stuff
-- Version 0.0.0.9000 released
-
 ### NOTE
 
 - Data &copy; OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
 - Nominatim Usage Policy: http://wiki.openstreetmap.org/wiki/Nominatim_usage_policy
 - MapQuest Nominatim Terms of Use: http://info.mapquest.com/terms-of-use/
 
-### TODO
-
-- Enable configuration of timeout
-- Enable switching Nominatim API server providers
-- Better spatial support
-
 ### Installation
 
+You will need to generate a GitHub [Personal Access Token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) to install from the Barnett Waddingham GitHub 
+
+
 ```{r install, eval=FALSE}
-devtools::install_github("hrbrmstr/nominatim")
+devtools::install_github('barnett-waddingham/nominatim', auth_token = 'blahblahblah')
 ```
 
 ```{r options, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
@@ -69,70 +57,48 @@ options(width=120)
 ### Usage
 
 ```{r usage}
+library(leaflet)
 library(nominatim)
 
 # current verison
 packageVersion("nominatim")
 
-# Reverse geocode Canadian embassies
-# complete list of Canadian embassies here:
-# http://open.canada.ca/data/en/dataset/6661f0f8-2fb2-46fa-9394-c033d581d531
+# General Search:
+osm_search("Barnett Waddingham", limit = 7)
 
-embassies <- data.frame(
-  lat=c("34.53311", "41.327546", "41.91534", "36.76148", "-13.83282",
-        "40.479094", "-17.820705", "13.09511", "13.09511"),
-  lon=c("69.1835", "19.818698", "12.50891", "3.0166", "-171.76462",
-        "-3.686115", "31.043559", "-59.59998", "-59.59998"),
-  osm_type=c("R", "W", "R", "N", "N", "W", "R", "N", "N"),
-  osm_id=c("3836233", "267586999", "3718093", "501522082", "305640297",
-           "309487691", "2793217", "501458399", "501458399"),
-  stringsAsFactors=FALSE)
-
-emb_coded_coords <- reverse_geocode_coords(embassies$lat, embassies$lon)
-head(emb_coded_coords)
-
-emb_coded_osm <- reverse_geocode_osm(embassies$osm_type, embassies$osm_id)
-head(emb_coded_osm)
-
-# lookup some places from the wiki example
-
-places <- c("R146656", "W104393803", "N240109189")
-places_found <- address_lookup(places)
-head(places_found)
-
-# more general search
-
-osm_search("[bakery]+berlin+wedding", limit=5)
+m <- leaflet() %>% addTiles() %>% addMarkers(lng = res$lon, lat = res$lat, popup = res$display_name)
 
 # address search
-
-osm_geocode(c("1600 Pennsylvania Ave, Washington, DC.",
-              "1600 Amphitheatre Parkway, Mountain View, CA",
-              "Seattle, Washington"))
-
-# spatial
-library(sp)
-plot(osm_search_spatial("[bakery]+berlin+wedding", limit=5)[[1]])
-
-# bounding box (et. al.)
-bb_lookup("West Yorkshire", c(-4.37, 54.88, 2.04, 52.96))
-
-bb_lookup("United States")
-
+osm_geocode("138 Cheapside, London, EC2V 6BW")
+ 
+# 
+# 
+# 
+# embassies <- data.frame(
+#   lat=c("34.53311", "41.327546", "41.91534", "36.76148", "-13.83282",
+#         "40.479094", "-17.820705", "13.09511", "13.09511"),
+#   lon=c("69.1835", "19.818698", "12.50891", "3.0166", "-171.76462",
+#         "-3.686115", "31.043559", "-59.59998", "-59.59998"),
+#   osm_type=c("R", "W", "R", "N", "N", "W", "R", "N", "N"),
+#   osm_id=c("3836233", "267586999", "3718093", "501522082", "305640297",
+#            "309487691", "2793217", "501458399", "501458399"),
+#   stringsAsFactors=FALSE)
+# 
+# emb_coded_coords <- reverse_geocode_coords(embassies$lat, embassies$lon)
+# head(emb_coded_coords)
+# 
+# emb_coded_osm <- reverse_geocode_osm(embassies$osm_type, embassies$osm_id)
+# head(emb_coded_osm)
+# 
+# # more general search
+# 
+# osm_search("[bakery]+berlin+wedding", limit=5)
+# 
+# # address search
+# osm_geocode(c("1600 Pennsylvania Ave, Washington, DC.",
+#               "1600 Amphitheatre Parkway, Mountain View, CA",
+#               "Seattle, Washington"))
+# 
+# # bounding box (et. al.)
+# bb_lookup("West Yorkshire", c(-4.37, 54.88, 2.04, 52.96))
 ```
-
-### Test Results
-
-```{r test}
-library(nominatim)
-library(testthat)
-
-date()
-
-test_dir("tests/")
-```
-
-### Code of Conduct
-
-Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). 
-By participating in this project you agree to abide by its terms.
